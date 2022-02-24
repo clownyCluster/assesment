@@ -1,3 +1,6 @@
+import '/screens/login.dart';
+import '/screens/registration.dart';
+import '/screens/weelcome.dart';
 import 'package:flutter/material.dart';
 import 'screens/home.dart';
 
@@ -15,7 +18,14 @@ class ShoppingCart extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen()
+      home: HomeScreen(),
+      initialRoute: Welcome.id,
+      routes: {
+        HomeScreen.id:(context) => HomeScreen(),
+        LogIn.id:(context) => Login(),
+        Registation.id:(context) => Registation(),
+        Welcome.id: (context) => Welcome()
+      },
     );
   }
 }
