@@ -1,7 +1,7 @@
 import 'package:assesment/models/button.dart';
 import 'package:assesment/screens/home.dart';
 import 'package:assesment/screens/registration.dart';
-import 'package:assesment/screens/weelcome.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LogIn extends StatelessWidget {
@@ -16,7 +16,14 @@ class LogIn extends StatelessWidget {
   }
 }
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  late String _email, _password;
+  final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,9 +44,12 @@ class Login extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
-                child: const TextField(
-                  decoration: InputDecoration(
+                child: TextField(
+                  decoration: const InputDecoration(
                       hintText: 'Enter your email', labelText: 'Email'),
+                  onChanged: (value) {
+                    _email = value;
+                  },
                 ),
               ),
               const SizedBox(
@@ -47,10 +57,13 @@ class Login extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
-                child: const TextField(
+                child: TextField(
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       hintText: 'Password', labelText: 'Enter a password:'),
+                  onChanged: (value) {
+                    _password = value;
+                  },
                 ),
               ),
               const SizedBox(
@@ -59,8 +72,21 @@ class Login extends StatelessWidget {
               Btn(
                 color: Colors.orange,
                 text: 'Log In',
-                onPress: () {
-                  Navigator.pushNamed(context, HomeScreen.id);
+                onPress: () async {
+                  try {
+                    final user = await _auth.signInWithEmailAndPassword(
+                        email: _email, password: _password);
+                    if (user != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomeScreen(),
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    print(e);
+                  }
                 },
               ),
               const SizedBox(

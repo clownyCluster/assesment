@@ -1,5 +1,6 @@
 import 'package:assesment/models/button.dart';
 import 'package:assesment/screens/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'login.dart';
@@ -16,7 +17,14 @@ class Registation extends StatelessWidget {
   }
 }
 
-class Register extends StatelessWidget {
+class Register extends StatefulWidget {
+  @override
+  State<Register> createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
+  late String _email, _password;
+  final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,9 +68,16 @@ class Register extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
-                child: const TextField(
-                  decoration: InputDecoration(
-                      hintText: 'Enter your email', labelText: 'Email'),
+                child: TextField(
+                  decoration: const InputDecoration(
+                    hintText: 'Enter your email',
+                    labelText: 'Email',
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _email = value.trim();
+                    });
+                  },
                 ),
               ),
               const SizedBox(
@@ -70,11 +85,16 @@ class Register extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
-                child: const TextField(
+                child: TextField(
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       hintText: 'Choose your password',
                       labelText: 'Enter a password:'),
+                  onChanged: (value) {
+                    setState(() {
+                      _password = value.trim();
+                    });
+                  },
                 ),
               ),
               Container(
@@ -92,9 +112,31 @@ class Register extends StatelessWidget {
               Btn(
                 color: const Color(0xFFE65100),
                 text: 'Sign Up',
-                onPress: () {
-                  Navigator.pushNamed(context, HomeScreen.id);
+                onPress: () async {
+                  try {
+                    final newUser = await _auth.createUserWithEmailAndPassword(
+                      email: _email,
+                      password: _password,
+                    );
+                    if (newUser != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomeScreen(),
+                        ),
+                      );
+                    }
+                    // setState(() {
+                    //   showSpinner = false;
+                    // });
+                  } catch (e) {
+                    print(e);
+                  }
                 },
+                // onPress: () => Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => HomeScreen()),
+                // ),
               ),
               const SizedBox(
                 height: 10,

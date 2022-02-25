@@ -27,17 +27,17 @@ class ColorAndSize extends StatelessWidget {
               Row(
                 children: [
                   ColorOption(
-                    color: Colors.blue,
+                    color: Colors.grey,
                     isSelected: true,
                   ),
                   ColorOption(
-                    color: Colors.yellow,
+                    color: Colors.brown,
                     isSelected: false,
                   ),
                   ColorOption(
-                      color: Colors.green, isSelected: false),
+                      color: Colors.lightGreen, isSelected: false),
                   ColorOption(
-                      color: Colors.red, isSelected: false),
+                      color: Colors.black, isSelected: false),
                 ],
               ),
             ],
